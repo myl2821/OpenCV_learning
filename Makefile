@@ -17,5 +17,5 @@ endef
 $(foreach item,  $(TARGET),  $(eval $(call gen_target,  $(item))))
 
 clean:
-	@-rm $(TARGET)
+	@-rm ./build/*
 
