@@ -24,39 +24,32 @@ int main(int argc, char* argv[])
     dst= Mat(size,CV_8UC3);
 
 
-        cvtColor(m_frame,gray,CV_BGR2GRAY);
+    cvtColor(m_frame,gray,CV_BGR2GRAY);
 
-        medianBlur(gray,gray,MEDIAN_BLUR_FILTER_SIZE);
+    medianBlur(gray,gray,MEDIAN_BLUR_FILTER_SIZE);
 
-        Laplacian(gray, edges, CV_8U, LAPLACIAN_FILTER_SIZE);
+    Laplacian(gray, edges, CV_8U, LAPLACIAN_FILTER_SIZE);
 
-        threshold(edges, masks, EDGES_THRESHOLD, 255, THRESH_BINARY_INV);
+    threshold(edges, masks, EDGES_THRESHOLD, 255, THRESH_BINARY_INV);
 
-        resize(m_frame, smallImg, smallSize, 0,0, INTER_LINEAR);
-        
-        for (int i=0; i<repetitions; i++) {
-            int ksize = 9; // Filter size. Has a large effect on speed.
-            double sigmaColor = 9; // Filter color strength.
-            double sigmaSpace = 7; // Spatial strength. Affects speed.
-            bilateralFilter(smallImg, tmp, ksize, sigmaColor, sigmaSpace);
-            bilateralFilter(tmp, smallImg, ksize, sigmaColor, sigmaSpace);
-        }
+    resize(m_frame, smallImg, smallSize, 0,0, INTER_LINEAR);
 
-        resize(smallImg, bigImg, size, 0,0, INTER_LINEAR);
+    for (int i=0; i<repetitions; i++) {
+        int ksize = 9; // Filter size. Has a large effect on speed.
+        double sigmaColor = 9; // Filter color strength.
+        double sigmaSpace = 7; // Spatial strength. Affects speed.
+        bilateralFilter(smallImg, tmp, ksize, sigmaColor, sigmaSpace);
+        bilateralFilter(tmp, smallImg, ksize, sigmaColor, sigmaSpace);
+    }
 
-        dst.setTo(0);
+    resize(smallImg, bigImg, size, 0,0, INTER_LINEAR);
 
-        //! copies those matrix elements to "m" that are marked with non-zero mask elements.
-        bigImg.copyTo(dst,masks);
+    dst.setTo(0);
 
-        // Display the processed image onto the screen.
-        imshow("keep smile :)", dst);
-        while(1) {
-            char keypress = cv::waitKey(0); // Need this to see anything!
-            if (keypress==27) {
-                break;
-            }
-        }
+    //! copies those matrix elements to "m" that are marked with non-zero mask elements.
+    bigImg.copyTo(dst,masks);
+
+    imwrite(argv[2], dst);
     return 0;
 }
 

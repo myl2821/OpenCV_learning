@@ -44,8 +44,12 @@ int main ( int argc, char** argv )
         { break; }
 
       /// Update kernel size for a normalized box filter
-      kernel_size = 3 + 2*( ind%5 );//3, 5, 7, 9, 11
-      kernel = Mat::ones( kernel_size, kernel_size, CV_32F )/ (float)(kernel_size*kernel_size);
+ //     kernel_size = 3 + 2*( ind%5 );//3, 5, 7, 9, 11
+ //     kernel = Mat::ones( kernel_size, kernel_size, CV_32F )/ (float)(kernel_size*kernel_size);
+
+Mat kernel = (Mat_<char>(3, 3) << 0, -1,  0, 
+                                 -1,  5, -1, 
+                                  0, -1,  0);
 
       /// Apply filter
       filter2D(src, dst, ddepth , kernel, anchor, delta, BORDER_DEFAULT );
